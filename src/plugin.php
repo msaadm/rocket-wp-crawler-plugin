@@ -2,13 +2,15 @@
 /**
  * Plugin main class
  *
- * @package     TO FILL
- * @since       TO FILL
- * @author      Mathieu Lamiot
+ * @package     RocketWPCrawler
+ * @since       2023
+ * @author      Mathieu Lamiot, Muhammad Saad Mateen
  * @license     GPL-2.0-or-later
  */
 
 namespace ROCKET_WP_CRAWLER;
+
+use ROCKET_WP_CRAWLER\Classes\Rocket_Wpc_Database_Management_Class;
 
 /**
  * Main plugin class. It manages initialization, install, and activations.
@@ -37,6 +39,8 @@ class Rocket_Wpc_Plugin_Class {
 		}
 		$plugin = isset( $_REQUEST['plugin'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) : '';
 		check_admin_referer( "activate-plugin_{$plugin}" );
+
+		Rocket_Wpc_Database_Management_Class::install_table();
 	}
 
 	/**
@@ -64,5 +68,7 @@ class Rocket_Wpc_Plugin_Class {
 		if ( ! current_user_can( 'activate_plugins' ) ) {
 			return;
 		}
+
+		Rocket_Wpc_Database_Management_Class::uninstall_table();
 	}
 }
