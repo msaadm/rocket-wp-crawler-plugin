@@ -16,6 +16,9 @@
 
 namespace ROCKET_WP_CRAWLER;
 
+global $rocket_crwl_db_version;
+$rocket_crwl_db_version = '0.1';
+
 define( 'ROCKET_CRWL_PLUGIN_FILENAME', __FILE__ ); // Filename of the plugin, including the file.
 
 if ( ! defined( 'ABSPATH' ) ) { // If WordPress is not loaded.
