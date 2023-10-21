@@ -2,9 +2,9 @@
 /**
  *  Exception handling
  *
- * @package     TO FILL
- * @since       TO FILL
- * @author      Mathieu Lamiot
+ * @package     RocketWPCrawler
+ * @since       2023
+ * @author      Mathieu Lamiot, Muhammad Saad Mateen
  * @license     GPL-2.0-or-later
  */
 
