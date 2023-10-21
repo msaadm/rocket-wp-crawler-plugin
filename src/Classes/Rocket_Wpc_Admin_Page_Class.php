@@ -23,7 +23,7 @@ class Rocket_Wpc_Admin_Page_Class {
 	 *
 	 * @return void
 	 */
-	public function content() {
+	public static function content() {
 		// Fetch All links.
 		$links = array();
 		?>
