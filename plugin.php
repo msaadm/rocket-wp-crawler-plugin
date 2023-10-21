@@ -2,16 +2,16 @@
 /**
  * Plugin Template
  *
- * @package     TO FILL
- * @author      Mathieu Lamiot
- * @copyright   TO FILL
+ * @package     RocketWPCrawler
+ * @author      Mathieu Lamiot, Muhammad Saad Mateen
+ * @copyright   2023
  * @license     GPL-2.0-or-later
  *
  * @wordpress-plugin
- * Plugin Name: TO FILL
- * Version:     TO FILL
- * Description: TO FILL
- * Author:      Mathieu Lamiot
+ * Plugin Name: Rocket WP Crawler
+ * Version:     0.1
+ * Description: Crawls the homepage and find the internal links.
+ * Author:      Mathieu Lamiot, Muhammad Saad Mateen
  */
 
 namespace ROCKET_WP_CRAWLER;
@@ -38,6 +38,8 @@ require_once __DIR__ . '/src/support/exceptions.php';
  */
 function wpc_crawler_plugin_init() {
 	$wpc_crawler_plugin = new Rocket_Wpc_Plugin_Class();
+
+	add_action( 'admin_menu', __NAMESPACE__ . '\Classes\Rocket_Wpc_Admin_Page_Class::add_menu' );
 }
 add_action( 'plugins_loaded', __NAMESPACE__ . '\wpc_crawler_plugin_init' );
 
