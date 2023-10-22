@@ -9,7 +9,7 @@ class Rocket_Wpc_Admin_Page_Class {
 	 * @return void
 	 */
 	public static function add_menu() {
-		add_menu_page(
+		add_options_page(
 			'Rocket WP Crawler',
 			'Rocket WP Crawler',
 			'manage_options',
