@@ -87,12 +87,11 @@ class Rocket_Wpc_Database_Management_Class {
 		// Check if the table exists.
 		if ( true === self::is_table_exist() ) {
 			// Table exists, so drop it.
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 			// Deleting temporary table.
-			dbDelta(
+			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
-					'DROP TABLE %1s;', // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
+					'DROP TABLE %1s;', // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder,WordPress.DB.DirectDatabaseQuery.SchemaChange
 					$table_name
 				)
 			);
