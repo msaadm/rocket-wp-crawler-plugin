@@ -33,6 +33,12 @@ class Rocket_Wpc_Admin_Page_Class {
 				font-family: Arial, Helvetica, sans-serif;
 			}
 
+            #rocket_wp_crawler_admin #header{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
 			#rocket_wp_crawler_admin .button {
 				background-color: #005BC6;
 				border: none;
@@ -43,6 +49,7 @@ class Rocket_Wpc_Admin_Page_Class {
 				display: inline-block;
 				font-size: 16px;
 				border-radius: 5px;
+                margin-bottom: 5px;
 			}
 
 			#rocket_wp_crawler_admin .table {
@@ -86,7 +93,7 @@ class Rocket_Wpc_Admin_Page_Class {
 						Remove Crawler Cron
 					</button>
 					<span>
-				Crawler will run again at <?php echo esc_html( gmdate( 'd/m/Y\ H:i:s', $timestamp ) ); ?>
+				Crawler will run again at <?php echo esc_html( gmdate( 'd/m/Y\ H:i:s', $timestamp ) ); ?> (GMT+0)
 				</span>
 				<?php endif; ?>
 			</div>
