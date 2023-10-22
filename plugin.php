@@ -16,6 +16,9 @@
 
 namespace ROCKET_WP_CRAWLER;
 
+use ROCKET_WP_CRAWLER\Classes\Rocket_Wpc_Cron_Class;
+
+
 global $rocket_crwl_db_version;
 $rocket_crwl_db_version = '0.1';
 
@@ -39,7 +42,13 @@ require_once __DIR__ . '/src/support/exceptions.php';
 function wpc_crawler_plugin_init() {
 	$wpc_crawler_plugin = new Rocket_Wpc_Plugin_Class();
 
+	add_action( 'admin_init', __NAMESPACE__ . '\Classes\Rocket_Wpc_Admin_Page_Class::enqueue_scripts' );
+
+	add_action( 'wp_ajax_handle_crawl_now', __NAMESPACE__ . '\Classes\Rocket_Wpc_Admin_Page_Class::handle_crawl_now' );
+
 	add_action( 'admin_menu', __NAMESPACE__ . '\Classes\Rocket_Wpc_Admin_Page_Class::add_menu' );
+
+	add_action( Rocket_Wpc_Cron_Class::ROCKET_WPC_CRON_HOOK, __NAMESPACE__ . '\Classes\Rocket_Wpc_Admin_Page_Class::do_crawler_process' );
 }
 add_action( 'plugins_loaded', __NAMESPACE__ . '\wpc_crawler_plugin_init' );
 

@@ -10,6 +10,7 @@
 
 namespace ROCKET_WP_CRAWLER;
 
+use ROCKET_WP_CRAWLER\Classes\Rocket_Wpc_Cron_Class;
 use ROCKET_WP_CRAWLER\Classes\Rocket_Wpc_Database_Management_Class;
 
 /**
@@ -55,6 +56,15 @@ class Rocket_Wpc_Plugin_Class {
 		}
 		$plugin = isset( $_REQUEST['plugin'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) : '';
 		check_admin_referer( "deactivate-plugin_{$plugin}" );
+
+		// Clear cache.
+		wp_cache_delete( 'rocket_wp_crawler_table_exists' );
+
+		// Deactivate Cron.
+		Rocket_Wpc_Cron_Class::deactivate_cron();
+
+		// Delete all Links.
+		Rocket_Wpc_Database_Management_Class::delete_all_rows();
 	}
 
 	/**
