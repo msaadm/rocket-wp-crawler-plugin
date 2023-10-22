@@ -4,6 +4,8 @@ namespace ROCKET_WP_CRAWLER\Classes;
 
 class Rocket_Wpc_Database_Management_Class {
 
+	const ROCKET_CRWL_DB_VERSION_KEY = 'rocket_crwl_db_version';
+
 	/**
 	 * Get table name
 	 *
@@ -61,15 +63,15 @@ class Rocket_Wpc_Database_Management_Class {
 				$wpdb->prepare(
 					'CREATE TABLE %1s (' . // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
 					' id int(9) NOT NULL AUTO_INCREMENT,' .
-					' link text NOT NULL,' .
-					' link_text text NOT NULL,' .
+					' link text NULL,' .
+					' link_text text NULL,' .
 					' PRIMARY KEY (id) ) %2s;', // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
 					$table_name,
 					$charset_collate
 				)
 			);
 
-			add_option( 'rocket_crwl_db_version', $rocket_crwl_db_version );
+			add_option( self::ROCKET_CRWL_DB_VERSION_KEY, $rocket_crwl_db_version );
 		}
 	}
 
@@ -82,23 +84,79 @@ class Rocket_Wpc_Database_Management_Class {
 		global $wpdb;
 		$table_name = self::get_table_name();
 
-		// Clear cache.
-		wp_cache_delete( 'rocket_wp_crawler_table_exists' );
-
 		// Check if the table exists.
 		if ( true === self::is_table_exist() ) {
 			// Table exists, so drop it.
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-			// Creating temporary table.
+			// Deleting temporary table.
 			dbDelta(
 				$wpdb->prepare(
-					'DROP TABLE %1s', // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
+					'DROP TABLE %1s;', // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
 					$table_name
 				)
 			);
 
-			delete_option( 'rocket_crwl_db_version' );
+			delete_option( self::ROCKET_CRWL_DB_VERSION_KEY );
 		}
+	}
+
+	/**
+	 * Insert data into temp table
+	 *
+	 * @param \stdClass[] $links Data to generate sitemap.
+	 *
+	 * @return void
+	 */
+	public static function insert_links( $links ) {
+		global $wpdb;
+
+		$prepare_values = array( self::get_table_name() );
+		$sql            = 'INSERT INTO %i (`link`, `link_text`) VALUES';
+		foreach ( $links as $link ) {
+			$sql             .= '(%s, %s),';
+			$prepare_values[] = $link['href'];
+			$prepare_values[] = $link['text'];
+		}
+		$sql = rtrim( $sql, ',' ) . ';';
+
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				$sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$prepare_values
+			)
+		);
+	}
+
+	/**
+	 * Delete all data from temp table
+	 *
+	 * @return void
+	 */
+	public static function delete_all_rows() {
+		global $wpdb;
+
+		$wpdb->query(
+			$wpdb->prepare(
+				'TRUNCATE TABLE %1s', // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
+				array( self::get_table_name() )
+			)
+		);
+	}
+
+	/**
+	 * Get all rows from temp table
+	 *
+	 * @return \stdClass[]|null
+	 */
+	public static function get_all_rows() {
+		global $wpdb;
+
+		return $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				'SELECT * FROM %1s ORDER by `link`;', // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
+				array( self::get_table_name() )
+			)
+		);
 	}
 }
