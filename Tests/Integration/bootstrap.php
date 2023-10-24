@@ -6,6 +6,8 @@ use WPMedia\PHPUnit\BootstrapManager;
 use function WPMedia\PHPUnit\init_test_suite;
 use Yoast\WPTestUtils\WPIntegration;
 
+require_once '/tmp/wordpress-tests-lib/includes/bootstrap.php';
+
 require_once dirname(dirname(__DIR__)).'/vendor/wp-media/phpunit/BootstrapManager.php';
 BootstrapManager::setupConstants( $_SERVER['argv'][1] );
 
